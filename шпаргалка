@@ -1,0 +1,111 @@
+Создание изолированного виртуального окружения
+
+        Модуль, используемый для создания и управления виртуальными средами, называется venv (docs.python.org/3/library/venv.html#module-venv).
+        Он обычно будет установлен большинством новых версий Python, которые вам доступны.
+        Если вы имеете разные версии Python в вашей системы, то можете выбрать конкретную версию Python,
+        выполнив команду python3 или какую версию захотите.
+
+        Чтобы создать виртуальную среду, выберите каталог для ее размещения и запустите модуль venv как скрипт с адресом директории:
+
+        python3 -m venv tutorial-env
+        Это создаст каталог tutorial-env, если он не существует, и также создаст директории внутри него,
+        содержащие копию интерпретатора Python, стандартную библиотеку и различные вспомогательные файлы.
+
+        Создав виртуальную среду, вы можете ее активировать.
+
+        В Windows командой:
+
+        $ my_venv\Scripts\activate.bat
+
+        В Unix или MacOS:
+
+        $ source my_venv/bin/activate
+
+        (Этот скрипт записан для оболочки bash. Если вы используете оболочки csh или fish, вместо этого вам следует
+        использовать альтернативные скрипты activate.csh и activate.fish.)
+
+        Активация виртуального окружения изменит приглашение оболочки, показывая, что вы используете виртуальную среду,
+        и изменит среду так, что запуск python даст вам конкретную версию и установку Python. Например:
+
+        $ source ~/envs/my_venv/bin/activate
+        (my_venv) $ python
+        Python 3.5.1 (default, May  6 2016, 10:59:36)
+
+Установка Django:
+
+    $ pip install django
+
+
+Проверить установку можно так:
+
+    $ python -m django --version
+
+Создание проекта
+    If this is your first time using Django, you’ll have to take care of some initial setup. Namely, you’ll need to auto-generate some code
+    that establishes a Django project – a collection of settings for an instance of Django, including database configuration,
+    Django-specific options and application-specific settings.
+
+    From the command line, cd into a directory where you’d like to store your code, then run the following command:
+
+    $ django-admin startproject mysite
+
+    This will create a mysite directory in your current directory. If it didn’t work, see Problems running django-admin.
+
+Запуск проекта
+    Из директории проекта запутите:
+
+    $ python manage.py runserver
+
+    Терерь можно посмотреть страницу пустого проекта на http://localhost:8000/
+
+Создание приложения, его первого представления  и маршрута
+
+    Now that your environment – a “project” – is set up, you’re set to start doing work.
+
+    Each application you write in Django consists of a Python package that follows a certain convention.
+    Django comes with a utility that automatically generates the basic directory structure of an app,
+    so you can focus on writing code rather than creating directories.
+
+    Projects vs. apps
+
+        What’s the difference between a project and an app? An app is a Web application that does something – e.g., a Weblog system,
+        a database of public records or a simple poll app. A project is a collection of configuration and apps for a particular website.
+        A project can contain multiple apps. An app can be in multiple projects.
+
+        Your apps can live anywhere on your Python path. In this tutorial, we’ll create our poll app right next to your
+        manage.py file so that it can be imported as its own top-level module, rather than a submodule of mysite.
+
+    To create your app, make sure you’re in the same directory as manage.py and type this command:
+    Для создания приложения из директории, в которой лежит файл manage.py наберите команду:
+
+    $ python manage.py startapp polls
+
+    После этого в появившейся директории pools можно создать файл маршрутов приложения pools/urls.py и описать например такой
+    мвршрут:
+                from django.urls import path
+                from . import views
+
+                urlpatterns = [
+                    path('', views.index, name='index'),
+                ]
+
+    В файле представлений приложения pools/views.py можно описать простейую функцию index
+
+                from django.http import HttpResponse
+
+                def index(request):
+                    return HttpResponse("Hello, world. You're at the polls index.")
+
+    Чтобы маршрут заработал включим в mysite/urls.py проекта маршруты приложения pools:
+
+                from django.contrib import admin
+                from django.urls import path, include
+
+                urlpatterns = [
+                    path('admin/', admin.site.urls),
+                    path('pools/', include('pools.urls')),
+
+
+                ]
+Далее смотри:
+https://docs.djangoproject.com/en/2.0/intro/tutorial02/
